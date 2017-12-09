@@ -158,7 +158,7 @@ class MyUi(QMainWindow):
 
     def checkBasicData(self, basicDataDir):
         if not os.path.isdir(basicDataDir):
-            os.makedirs(stockDataDir)
+            os.makedirs(basicDataDir)
         fl = [x for x in os.listdir(basicDataDir) if os.path.splitext(x)[
             1] == '.data']
         self.ui.basicDataLabel.setText(
@@ -196,7 +196,7 @@ class MyUi(QMainWindow):
 
     def checkClassified(self, classifiedFile):
         if not os.path.exists(classifiedFile):
-            reply = QMessageBox.information(
+            QMessageBox.information(
                 self, '提示', '行业统计数据文件%s不存在，请重建！' %
                 classifiedFile, QMessageBox.Yes)
         df = iwencai.load_Snapshot(classifiedFile)
@@ -230,6 +230,9 @@ class MyUi(QMainWindow):
         _thread.start()
 
     def generateGraph(self):
+        if self.ui.serieslistWidget.count() == 0:
+            return
+        
         layout = go.Layout(xaxis=dict(
             tickformat='%Y-%m-%d',
             rangeselector=dict(buttons=list([
@@ -241,7 +244,14 @@ class MyUi(QMainWindow):
                 dict(label='显示所有', step='all')
             ])),
             rangeslider=dict(visible=True),
-            type='date'))
+            type='date',
+            title='时间'),
+            yaxis=dict(),
+            yaxis2=dict(
+                title='yaxis2 title',
+                overlaying='y',
+                side='right')
+            )
 
         out_M = pd.DataFrame()
         out_C = pd.DataFrame()
@@ -261,7 +271,7 @@ class MyUi(QMainWindow):
                 index = out_M['date']
                 value = out_M[series[3]]
                 name = '%s-%s(%s)' % (series[2], series[3], series[1])
-                data.append(go.Scatter(x=index, y=value, name=name))
+                data.append(go.Scatter(x=index, y=value, name=name, showlegend=True))
 
             elif series[0] == 'C':
                 out_C = classified[(classified['行业'] == series[1]) & (classified[('date', '')] > start) & (
@@ -270,7 +280,7 @@ class MyUi(QMainWindow):
                 index = out_C[('date', '')]
                 value = out_C[(series[3], series[2])]
                 name = '%s-%s(%s)' % (series[2], series[3], series[1])
-                data.append(go.Scatter(x=index, y=value, name=name))
+                data.append(go.Scatter(x=index, y=value, name=name, showlegend=True))
 
             elif series[0] == 'S':
                 stock = iwencai.load_Snapshot(
@@ -282,21 +292,26 @@ class MyUi(QMainWindow):
                 index = out_S['date']
                 value = out_S[series[3]]
                 name = '%s-%s(%s)' % (series[2], series[3], series[1])
-                data.append(go.Scatter(x=index, y=value, name=name))
+                data.append(go.Scatter(x=index, y=value, name=name, showlegend=True))        
+
+        layout['yaxis']['title']=data[0]['name']     
+        if len(data) >1:
+            data[1]['yaxis'] = 'y2'
+            layout['yaxis2']['title']=data[1]['name']
 
         fig = go.Figure(data=data, layout=layout)
-        config = {'scrollZoom': True, 'editable': True}
+    
+        config = {'scrollZoom': True, 'editable': True, 'displaylogo':False, 'modeBarButtonsToRemove':['sendDataToCloud']}
         plotly.offline.plot(
             fig,
             filename=RENDER_FILE,
             auto_open=False,
             show_link=False,
-            config=config)
+            config=config,image='jpeg')
 
         self.ui.graphWidget.reload()
         self.ui.graphWidget.repaint()
         self.ui.graphWidget.update()
-
 
 if not QApplication.instance():
     app = QApplication(sys.argv)

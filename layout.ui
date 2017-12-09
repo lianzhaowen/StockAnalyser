@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1129</width>
+    <width>1113</width>
     <height>775</height>
    </rect>
   </property>
@@ -49,7 +49,7 @@
               </property>
               <property name="maximumSize">
                <size>
-                <width>200</width>
+                <width>300</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -111,7 +111,7 @@
               </property>
               <property name="maximumSize">
                <size>
-                <width>200</width>
+                <width>300</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -177,7 +177,7 @@
               </property>
               <property name="maximumSize">
                <size>
-                <width>200</width>
+                <width>300</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -254,7 +254,7 @@
               </property>
               <property name="maximumSize">
                <size>
-                <width>200</width>
+                <width>300</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -343,7 +343,7 @@
               </property>
               <property name="maximumSize">
                <size>
-                <width>200</width>
+                <width>300</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -664,27 +664,6 @@ p, li { white-space: pre-wrap; }
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="checkButton_3">
-                <property name="text">
-                 <string>检查</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QPushButton" name="checkButton_4">
-                <property name="text">
-                 <string>检查</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QPushButton" name="checkButton_5">
-                <property name="text">
-                 <string>检查</string>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="1">
                <widget class="QPushButton" name="bulidButton_2">
                 <property name="text">
@@ -692,17 +671,10 @@ p, li { white-space: pre-wrap; }
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QPushButton" name="bulidButton_4">
+              <item row="2" column="0">
+               <widget class="QPushButton" name="checkButton_3">
                 <property name="text">
-                 <string>重建</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="1">
-               <widget class="QPushButton" name="bulidButton_5">
-                <property name="text">
-                 <string>重建</string>
+                 <string>检查</string>
                 </property>
                </widget>
               </item>
@@ -713,7 +685,48 @@ p, li { white-space: pre-wrap; }
                 </property>
                </widget>
               </item>
+              <item row="3" column="0">
+               <widget class="QPushButton" name="checkButton_4">
+                <property name="text">
+                 <string>检查</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QPushButton" name="bulidButton_4">
+                <property name="text">
+                 <string>重建</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QPushButton" name="checkButton_5">
+                <property name="text">
+                 <string>检查</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QPushButton" name="bulidButton_5">
+                <property name="text">
+                 <string>重建</string>
+                </property>
+               </widget>
+              </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>&lt;p style=&quot;line-height:150%&quot;&gt;&lt;font color=&quot;red&quot; size=&quot;5&quot; face=&quot;微软雅黑&quot;&gt;涨破泡沫&lt;br&gt;跌破价值&lt;br&gt;均值回归&lt;br&gt;历史轮回&lt;/font&gt;&lt;/p&gt;</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::RichText</enum>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
