@@ -40,9 +40,9 @@ class MyUi(QMainWindow):
             (rect.width() - size.width()) / 2,
             (rect.height() - size.height()) / 2)
         # 初始化控件
-        self.ui.marketComboBox.addItems(mk for mk in iwencai.MARKET)
-        self.ui.marketMethodComboBox.addItems(mt for mt in iwencai.METHOD)
-        self.ui.classifiedMethodComboBox.addItems(mt for mt in iwencai.METHOD)
+        self.ui.marketComboBox.addItems(mk['name'] for mk in iwencai.MARKET)
+        self.ui.marketMethodComboBox.addItems(mt['name'] for mt in iwencai.METHOD)
+        self.ui.classifiedMethodComboBox.addItems(mt['name'] for mt in iwencai.METHOD)
 
         self.ui.marketSeriesComboBox.addItems(
             st for st in iwencai.STATISTIC_COLUMN)
@@ -232,7 +232,7 @@ class MyUi(QMainWindow):
     def generateGraph(self):
         if self.ui.serieslistWidget.count() == 0:
             return
-        
+
         layout = go.Layout(xaxis=dict(
             tickformat='%Y-%m-%d',
             rangeselector=dict(buttons=list([
@@ -251,7 +251,7 @@ class MyUi(QMainWindow):
                 title='yaxis2 title',
                 overlaying='y',
                 side='right')
-            )
+        )
 
         out_M = pd.DataFrame()
         out_C = pd.DataFrame()
@@ -264,23 +264,26 @@ class MyUi(QMainWindow):
         end = self.ui.endDateEdit.text().replace('/', '')
         for i in range(self.ui.serieslistWidget.count()):
             series = self.ui.serieslistWidget.item(i).text().split('-', 3)
+            method = iwencai.get_method_by_name(series[2])
             if series[0] == 'M':
                 out_M = statistic[(statistic['market'] == series[1]) & (statistic['date'] > start) & (
-                    statistic['date'] < end) & (statistic.index == series[2])][['date', series[3]]]
+                    statistic['date'] < end) & (statistic.index == method)][['date', series[3]]]
                 out_M['date'] = pd.to_datetime(out_M['date'])
                 index = out_M['date']
                 value = out_M[series[3]]
                 name = '%s-%s(%s)' % (series[2], series[3], series[1])
-                data.append(go.Scatter(x=index, y=value, name=name, showlegend=True))
+                data.append(go.Scatter(x=index, y=value,
+                                       name=name, showlegend=True))
 
             elif series[0] == 'C':
                 out_C = classified[(classified['行业'] == series[1]) & (classified[('date', '')] > start) & (
-                    classified[('date', '')] < end)][[('date', ''), (series[3], series[2])]]
+                    classified[('date', '')] < end)][[('date', ''), (series[3], method)]]
                 out_C[('date', '')] = pd.to_datetime(out_C[('date', '')])
                 index = out_C[('date', '')]
-                value = out_C[(series[3], series[2])]
+                value = out_C[(series[3], method)]
                 name = '%s-%s(%s)' % (series[2], series[3], series[1])
-                data.append(go.Scatter(x=index, y=value, name=name, showlegend=True))
+                data.append(go.Scatter(x=index, y=value,
+                                       name=name, showlegend=True))
 
             elif series[0] == 'S':
                 stock = iwencai.load_Snapshot(
@@ -292,26 +295,29 @@ class MyUi(QMainWindow):
                 index = out_S['date']
                 value = out_S[series[3]]
                 name = '%s-%s(%s)' % (series[2], series[3], series[1])
-                data.append(go.Scatter(x=index, y=value, name=name, showlegend=True))        
+                data.append(go.Scatter(x=index, y=value,
+                                       name=name, showlegend=True))
 
-        layout['yaxis']['title']=data[0]['name']     
-        if len(data) >1:
+        layout['yaxis']['title'] = data[0]['name']
+        if len(data) > 1:
             data[1]['yaxis'] = 'y2'
-            layout['yaxis2']['title']=data[1]['name']
+            layout['yaxis2']['title'] = data[1]['name']
 
         fig = go.Figure(data=data, layout=layout)
-    
-        config = {'scrollZoom': True, 'editable': True, 'displaylogo':False, 'modeBarButtonsToRemove':['sendDataToCloud']}
+
+        config = {'scrollZoom': True, 'editable': True, 'displaylogo': False,
+                  'modeBarButtonsToRemove': ['sendDataToCloud']}
         plotly.offline.plot(
             fig,
             filename=RENDER_FILE,
             auto_open=False,
             show_link=False,
-            config=config,image='jpeg')
+            config=config, image='jpeg')
 
         self.ui.graphWidget.reload()
         self.ui.graphWidget.repaint()
         self.ui.graphWidget.update()
+
 
 if not QApplication.instance():
     app = QApplication(sys.argv)
