@@ -14,7 +14,6 @@ import datetime
 
 RENDER_FILE = iwencai.ROOT_DIR + '/render.html'
 
-
 class emittingStream(QObject):
     textWritten = pyqtSignal(str)  # 定义一个发送str的信号
 
@@ -41,8 +40,10 @@ class MyUi(QMainWindow):
             (rect.height() - size.height()) / 2)
         # 初始化控件
         self.ui.marketComboBox.addItems(mk['name'] for mk in iwencai.MARKET)
-        self.ui.marketMethodComboBox.addItems(mt['name'] for mt in iwencai.METHOD)
-        self.ui.classifiedMethodComboBox.addItems(mt['name'] for mt in iwencai.METHOD)
+        self.ui.marketMethodComboBox.addItems(
+            mt['name'] for mt in iwencai.METHOD)
+        self.ui.classifiedMethodComboBox.addItems(
+            mt['name'] for mt in iwencai.METHOD)
 
         self.ui.marketSeriesComboBox.addItems(
             st for st in iwencai.STATISTIC_COLUMN)
@@ -89,6 +90,7 @@ class MyUi(QMainWindow):
         self.ui.loadButton.clicked.connect(lambda: self.loadSeries())
         self.ui.deleteButton.clicked.connect(lambda: self.deleteSeries())
         self.ui.generateButton.clicked.connect(lambda: self.generateGraph())
+
         self.ui.checkButton_1.clicked.connect(
             lambda: self.checkBasicData(
                 self.ui.basicDataLineEdit.text()))
@@ -312,12 +314,11 @@ class MyUi(QMainWindow):
             filename=RENDER_FILE,
             auto_open=False,
             show_link=False,
-            config=config, image='jpeg')
+            config=config)
 
         self.ui.graphWidget.reload()
         self.ui.graphWidget.repaint()
         self.ui.graphWidget.update()
-
 
 if not QApplication.instance():
     app = QApplication(sys.argv)
